@@ -40,7 +40,8 @@ __global__ void calculateElectrostaticField(ParticleSoA particles, int numPartic
         float dx = particles.x[i] - idx;
         float dy = particles.y[i] - idy;
         float distanceSquared = dx * dx + dy * dy;
-        if (distanceSquared > 0.1f && distanceSquared < 10.0f) {
+        // if (distanceSquared > 0.1f && distanceSquared < 10.0f) {
+        if (distanceSquared > 0.1f ) {
             float force = Ck * particles.charge[i] / distanceSquared;
             fieldStrength += force;  // Accumulate field strength, positive for protons, negative for electrons
         }
@@ -116,7 +117,7 @@ int main(int argc, char* argv[]) {
     // Initialize SDL and create a window
     SDL_Init(SDL_INIT_VIDEO);
 
-    int width = 1280, height = 720;
+    int width = 600, height = 600;
     SDL_Window* window = SDL_CreateWindow("Electrostatic Field Simulation", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -215,31 +216,25 @@ int main(int argc, char* argv[]) {
             int intensity = field[i];
 
             if (intensity > 0) {
-                // SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-                // SDL_RenderDrawPoint(renderer, x, y);
                 positivePoints.push_back({x, y});
             } else if (intensity == 0) {
-                // SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-                // SDL_RenderDrawPoint(renderer, x, y);
                 neutralPoints.push_back({x, y});
             } else {
-                // SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-                // SDL_RenderDrawPoint(renderer, x, y);
                 negativePoints.push_back({x, y});
             }
         }
 
         // Render positive points (red)
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);  // Red
-        SDL_RenderDrawPoints(renderer, positivePoints.data(), positivePoints.size());
+        // SDL_SetRenderDrawColor(renderer, 255, 0, 0, 155);  // Red
+        // SDL_RenderDrawPoints(renderer, positivePoints.data(), positivePoints.size());
 
-        // Render neutral points (white)
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);  // White
-        SDL_RenderDrawPoints(renderer, neutralPoints.data(), neutralPoints.size());
+        // // Render neutral points (white)
+        // SDL_SetRenderDrawColor(renderer, 255, 255, 255, 155);  // White
+        // SDL_RenderDrawPoints(renderer, neutralPoints.data(), neutralPoints.size());
 
-        // Render negative points (blue)
-        SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);  // Blue
-        SDL_RenderDrawPoints(renderer, negativePoints.data(), negativePoints.size());
+        // // Render negative points (blue)
+        // SDL_SetRenderDrawColor(renderer, 0, 0, 255, 155);  // Blue
+        // SDL_RenderDrawPoints(renderer, negativePoints.data(), negativePoints.size());
 
 
         // Batch all particle positions into a vector of SDL_Point
